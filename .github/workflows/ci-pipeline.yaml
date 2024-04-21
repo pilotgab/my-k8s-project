@@ -1,0 +1,97 @@
+name: Continuous-Integration-Pipeline(CI)
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: write
+  actions: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      - name: Lint with flake8
+        run: flake8 --count --select=E9,F63,F7,F82 --show-source --statistics
+
+  build:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: "Configure AWS Credentials"
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          role-to-assume: arn:aws:iam::975050026662:role/deel-github-oidc-role
+          aws-region: eu-west-1
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Get the short SHA
+        id: sha
+        run: echo "::set-output name=sha::$(git rev-parse --short HEAD)"
+
+      - name: Build Tag and push Docker image
+        env:
+          ECR_REGISTRY: 975050026662.dkr.ecr.eu-west-1.amazonaws.com/deel-test-registry
+        run: |
+          IMAGE_TAG=${{ steps.sha.outputs.sha }}
+          docker build -t $ECR_REGISTRY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY:$IMAGE_TAG
+
+      - name: Updating new image tag in values.yaml file
+        env:
+          ECR_REGISTRY: 975050026662.dkr.ecr.eu-west-1.amazonaws.com/deel-test-registry
+        run: |
+          IMAGE_TAG=${{ steps.sha.outputs.sha }}
+          sed -i 's|repository:.*$|repository: '"$ECR_REGISTRY"'|' deel-test/values.yaml
+          sed -i 's|tag:.*$|tag: '"$IMAGE_TAG"'|' deel-test/values.yaml
+
+      - name: Setting Git Config
+        run: |
+          git config --local user.email "captain.gab@protonmail.com"
+          git config --local user.name "GH-runner"
+
+      - name: Stage Changes
+        run: git add deel-test/values.yaml
+
+      - name: Commit Changes
+        run: git diff-index --quiet HEAD || git commit -m "Update image repository and tag to $ECR_REGISTRY:${{ steps.sha.outputs.sha }}"
+
+      - name: Push Changes
+        id: push-changes
+        run: git push origin HEAD:main
+
+      - name: Retry Commit changes
+        id: retry-push-changes
+        if: ${{ steps.push-changes.outcome == 'failure' }}
+        run: |
+          git pull origin main --rebase && git push origin main
+
+      - name: Notify on failure
+        id: slack
+        uses: rtCamp/action-slack-notify@v2
+        if: ${{ failure() && steps.retry-push-changes.conclusion == 'faliure'}}
+        with:
+          slack_webhook: ${{ secrets.SLACK_WEBHOOK }}
+          channel: C06S8B0H9DG
+          color: danger
+          message: "GitHub workflow failed for commit ${{ github.event.head_commit.message }} with status ${{ github.workflow.status }}"
