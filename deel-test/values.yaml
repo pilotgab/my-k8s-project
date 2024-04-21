@@ -7,16 +7,13 @@ replicaCount: 5
 
 image:
   repository: 975050026662.dkr.ecr.eu-west-1.amazonaws.com/deel-test-registry
-  tag: 7b79971
+  tag: 009b46c
   pullPolicy: Always
-
 
 service:
   type: LoadBalancer
   port: 80
-  targetPort:
-    port: 80
-
+  targetPort: 80  # Corrected: Removed the 'port' field inside 'targetPort'
 
 resources:
   requests:
@@ -25,7 +22,6 @@ resources:
   limits:
     cpu: "500m"
     memory: "500Mi"
-
 
 autoscaling:
   enabled: false
@@ -40,4 +36,4 @@ strategy:
 
 container:
   name: deel-test
-  port: 80
+  port: 80  # Moved the container port specification here if needed
