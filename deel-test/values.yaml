@@ -13,7 +13,7 @@ image:
 
 service:
   type: LoadBalancer
-  port: 8080
+  port: 80
   targetPort:
     port: 80
 
@@ -40,4 +40,4 @@ strategy:
 
 container:
   name: deel-test
-  port: 8080
+  port: 80
