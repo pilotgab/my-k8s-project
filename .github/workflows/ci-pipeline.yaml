@@ -39,7 +39,7 @@ jobs:
       - name: "Configure AWS Credentials"
         uses: aws-actions/configure-aws-credentials@v4.0.2
         with:
-          role-to-assume: arn:aws:iam::975050026662:role/deel-github-oidc-role
+          role-to-assume: arn:aws:iam::975050026662:role/deel-test-oidc-role
           aws-region: eu-west-1
 
       - name: Login to Amazon ECR
