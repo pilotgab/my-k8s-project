@@ -10,7 +10,7 @@ variable "private_subnets" {
     "10.40.1.0/24",
     "10.40.2.0/24",
     "10.40.3.0/24",
-    "10.40.6.0/24" # New subnet specifically for EKS
+    "10.40.6.0/24" 
   ]
 }
 
@@ -23,7 +23,7 @@ variable "public_subnets" {
 
 variable "region" {
   description = "AWS Region for the resources"
-  default     = "eu-west-1"
+  default     = "us-east-1"
 }
 
 variable "enable_private_subnet_internet_access" {

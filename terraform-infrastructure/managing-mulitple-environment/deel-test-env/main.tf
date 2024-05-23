@@ -44,6 +44,12 @@ module "eks" {
   instance_type     = var.instance_type
 }
 
+module "cloudfront" {
+  source      = "../../web-app-modules/cloudfront"
+  region      = var.region
+  bucket_name = "deel-test-report"
+}
+
 
 
 

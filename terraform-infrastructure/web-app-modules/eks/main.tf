@@ -1,18 +1,18 @@
-resource "aws_eks_cluster" "deel-eks" {
+resource "aws_eks_cluster" "deel_eks" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_role.arn
 
   vpc_config {
-    subnet_ids         = var.private_subnets
-    security_group_ids = var.security_group_id
+    subnet_ids             = var.private_subnets
+    security_group_ids     = var.security_group_id
     endpoint_public_access = true
   }
 
   depends_on = [aws_iam_role_policy_attachment.eks_policy_attachment]
 }
 
-resource "aws_eks_node_group" "deel-eks-nodes" {
-  cluster_name    = aws_eks_cluster.deel-eks.name
+resource "aws_eks_node_group" "deel_eks_nodes" {
+  cluster_name    = aws_eks_cluster.deel_eks.name
   node_group_name = var.node_group_name
   node_role_arn   = aws_iam_role.eks_node_role.arn
   subnet_ids      = var.private_subnets
@@ -25,7 +25,12 @@ resource "aws_eks_node_group" "deel-eks-nodes" {
 
   instance_types = [var.instance_type]
 
-  depends_on = [aws_eks_cluster.deel-eks]
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_node_policy_attachment,
+    aws_iam_role_policy_attachment.eks_node_vpc_cni_policy_attachment,
+    aws_iam_role_policy_attachment.eks_node_policy_attachment_2,
+    aws_eks_cluster.deel_eks,
+  ]
 }
 
 resource "aws_iam_role" "eks_role" {

@@ -6,8 +6,8 @@
 replicaCount: 5
 
 image:
-  repository: 975050026662.dkr.ecr.eu-west-1.amazonaws.com/deel-test-registry
-  tag: f1d15bc
+  repository: 891377174375.dkr.ecr.us-east-1.amazonaws.com/deel-test-registry
+  tag: 57eac75
 
   pullPolicy: Always
 
