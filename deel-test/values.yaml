@@ -13,7 +13,8 @@ image:
 service:
   type: ClusterIP
   port: 80
-  targetPort: 80 # Corrected: Removed the 'port' field inside 'targetPort'
+  targetPort:
+    port: 8080 # Corrected: Removed the 'port' field inside 'targetPort'
 
 resources:
   requests:
