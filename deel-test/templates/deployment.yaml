@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}-deployment
+  name: deel-test
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
+      app: deel-test
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
+        app: deel-test
     spec:
       containers:
-      - name: {{ .Values.container.name }}
+      - name: deel-test
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         ports:
         - containerPort: {{ .Values.container.port }}
