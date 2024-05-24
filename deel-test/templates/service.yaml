@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: deel-test
 spec:
-  type: { { .Values.service.type } }
+  type: {{ .Values.service.type }}
   ports:
-    - port: { { .Values.service.port } }
-      targetPort: { { .Values.service.targetPort.port } }
-      protocol: TCP
+  - port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.targetPort.port }}
+    protocol: TCP
   selector:
     app: deel-test
