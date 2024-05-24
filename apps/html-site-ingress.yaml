@@ -1,10 +1,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: deel-test-service
+  name: deel-test-application-service
   namespace: deel-test
   labels:
-    app: deel-test-service
+    app: deel-test-application-service
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
@@ -17,6 +17,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: deel-test-service
+            name: deel-test-application-service
             port:
               number: 80
