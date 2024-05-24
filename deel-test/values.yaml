@@ -8,12 +8,12 @@ replicaCount: 5
 image:
   repository: 891377174375.dkr.ecr.us-east-1.amazonaws.com/deel-test-registry
 <<<<<<< HEAD
-  tag: 7c50859
+  tag: 0f0f54a
 =======
 <<<<<<< HEAD
-  tag: e67979d
+  tag: 0f0f54a
 =======
-  tag: e67979d
+  tag: 0f0f54a
 >>>>>>> 77cbf3aa6ebbcf9ca40920c4ecc554474d787c15
 >>>>>>> f28d3fb08385dbecc1ff7d9a416d186960e469ad
   pullPolicy: Always
