@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: deel-test
+  name: {{ .Release.Name }}-{{ .Chart.Name }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -9,4 +9,4 @@ spec:
     targetPort: {{ .Values.service.targetPort.port }}
     protocol: TCP
   selector:
-    app: deel-test
+    app: {{ .Release.Name }}-{{ .Chart.Name }}
