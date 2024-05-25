@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: deel-test-application-deel-test
+  name: nginx-ingress
   namespace: deel-test
   labels:
     app: deel-test-application-deel-test
@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: gabriel-buka.captaingab.online
+  - host: buka.captaingab.online
     http:
       paths:
       - path: /
